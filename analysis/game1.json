@@ -1,0 +1,82 @@
+{
+  "analyzedAt": "2026-11-12",
+  "tagline": "2D pixel-art run-and-gun in the style of Contra / Broforce",
+  "platform": "Desktop game (Godot 4.3)",
+  "stack": ["Godot 4.3", "GDScript", "480×270 pixel art"],
+  "stage": "Prototype",
+  "summary": "A movement-and-shooting prototype. The player controller is well done: run, sprint and sneak gaits, a tunable jump with coyote time, jump buffering and variable height, 8-way aiming, held-fire shooting, and distance-driven sprite animation with idle variants. Everything else that makes a run-and-gun a game is still missing: enemies, damage, death, a real tile-based level, HUD, audio and menus. The level is hard-coded rectangles, and bullets only collide with the world.",
+  "implemented": [
+    { "group": "Player controller", "items": [
+      "Run (default), sprint (Shift), sneak (P) with separate speeds",
+      "Optional acceleration and deceleration curves",
+      "Jump with coyote time, jump buffer, variable height (jump cut) and heavier fall gravity",
+      "Contra-style prone: hold down while standing still",
+      "8-way aiming with up and down inputs",
+      "Held-fire shooting with a configurable fire interval and muzzle marker",
+      "Every value is exposed in the Inspector with ranges and tooltips, so it can be tuned live"
+    ]},
+    { "group": "Animation", "items": [
+      "Sprite-sheet animation for idle (2 random variants), run, sprint, sneak and jump",
+      "Leg cycle driven by distance moved, so feet don't slide",
+      "Multi-phase jump: take-off, rise, peak, fall, fast fall and landing frames"
+    ]},
+    { "group": "World", "items": [
+      "Placeholder level made from tile-unit rectangles, with ground, walls and platforms",
+      "1-tile-thick platforms you can jump through from below",
+      "Bullets with lifetime that disappear on world hits",
+      "Camera attached to the player",
+      "Pixel-perfect 480×270 viewport with integer scaling",
+      "Two background images (Soviet sunset street)"
+    ]}
+  ],
+  "inProgress": [
+    { "where": "Uncommitted in the local clone (22 files)", "items": [
+      "Level 1 'burned forest' look: far and near parallax backgrounds",
+      "Crow flocks crossing the sky, and smoke wisps from smouldering stumps",
+      "Ash dust kicked up by the hero's feet when running, jumping and landing",
+      "Sliding state sprite, plus new jump-off and jump-up sprites in place of jump1.png",
+      "Level doubled to 120 tiles. Viewport moved to 960×540",
+      "Procedurally generated ash-ground texture for the platforms"
+    ]}
+  ],
+  "competitors": [
+    { "name": "Contra", "note": "1987 NES classic. The reference for the genre's core loop" },
+    { "name": "Broforce", "note": "Destructible terrain, many characters, chaotic co-op" },
+    { "name": "Blazing Chrome", "note": "Modern Contra-like with pixel art and bosses" },
+    { "name": "Metal Slug", "note": "Animation-heavy arcade run-and-gun with vehicles" }
+  ],
+  "matrix": [
+    { "feature": "Tight platforming (coyote time, buffer, variable jump)", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "8-way aiming", "us": 1, "comp": [1, 0, 1, 0.5] },
+    { "feature": "Prone or crouch", "us": 0.5, "comp": [1, 0, 1, 1], "priority": "P3", "note": "Logic exists, but there's no prone sprite or smaller hitbox" },
+    { "feature": "Enemies with AI", "us": 0, "comp": [1, 1, 1, 1], "priority": "P1" },
+    { "feature": "Health, lives, death and respawn", "us": 0, "comp": [1, 1, 1, 1], "priority": "P1" },
+    { "feature": "Tile-based levels with a scrolling camera", "us": 0.5, "comp": [1, 1, 1, 1], "priority": "P1", "note": "Placeholder rectangles. Needs a TileMapLayer and tileset" },
+    { "feature": "Weapon pickups and power-ups", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2" },
+    { "feature": "HUD (lives, weapon, score)", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2" },
+    { "feature": "Sound effects and music", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2", "note": "assets/audio is empty" },
+    { "feature": "Gamepad support", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2", "note": "Input map has keyboard events only" },
+    { "feature": "Menus, pause and game over", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2" },
+    { "feature": "Checkpoints and continues", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2" },
+    { "feature": "Boss fights", "us": 0, "comp": [1, 1, 1, 1], "priority": "P3" },
+    { "feature": "Local co-op", "us": 0, "comp": [1, 1, 1, 1], "priority": "P3" },
+    { "feature": "Destructible terrain", "us": 0, "comp": [0, 1, 0, 0.5], "priority": "P3" },
+    { "feature": "Vehicles", "us": 0, "comp": [0, 0, 0.5, 1], "priority": "P3" }
+  ],
+  "nextSteps": [
+    { "priority": "P1", "title": "Commit and push the level-1 art and effects work", "why": "22 files exist only on this machine, including deleted assets that player.gd still referenced.", "effort": "S" },
+    { "priority": "P1", "title": "Damage system with hitbox and hurtbox Areas plus a Health component", "why": "Bullets currently only hit walls. Damage underpins enemies, player death and bosses.", "effort": "S" },
+    { "priority": "P1", "title": "First enemy type (walker that shoots) and a spawner", "why": "Gives the game a core loop: something to shoot and dodge.", "effort": "M" },
+    { "priority": "P1", "title": "Replace the rectangle level with a TileMapLayer, and set camera limits", "why": "Makes real level design possible and scales past one screen.", "effort": "M" },
+    { "priority": "P1", "title": "Player death, respawn and lives", "why": "Gives fights stakes. Contra's one-hit death defines the genre.", "effort": "S" },
+    { "priority": "P2", "title": "HUD, shot and hit sound effects, and gamepad mappings", "why": "Small effort, but the game feels much better.", "effort": "S" },
+    { "priority": "P2", "title": "Weapon pickups (spread, laser, rapid)", "why": "The signature Contra progression loop.", "effort": "M" },
+    { "priority": "P3", "title": "End-of-level boss and a level-complete screen", "why": "Gives a level a complete start-to-finish arc.", "effort": "L" }
+  ],
+  "risks": [
+    "There's one commit, so the change history isn't usable yet",
+    "No automated tests. GUT or gdUnit4 tests for the player state logic would help",
+    "player.gd mixes input, physics and animation in 280 lines. Split it into a state machine before adding more states",
+    "The folder name 'idel' is a typo for 'idle', and it's referenced from code"
+  ]
+}

@@ -1,0 +1,8 @@
+[
+  { "id": "game1", "name": "Run and Gun", "repo": "https://github.com/iLLia12/game1", "icon": "gamepad", "color": "#e5534b" },
+  { "id": "book-reader", "name": "Book Reader", "repo": "https://github.com/iLLia12/book-reader", "icon": "book", "color": "#d4a72c" },
+  { "id": "score-player", "name": "Score Player", "repo": "https://github.com/iLLia12/score-player", "icon": "music", "color": "#a371f7" },
+  { "id": "chess", "name": "Chess Online", "repo": "https://github.com/iLLia12/chess", "icon": "chess", "color": "#e6edf3" },
+  { "id": "channel4444", "name": "channel4444", "repo": "https://github.com/iLLia12/channel4444", "icon": "video", "color": "#3fb950" },
+  { "id": "project-control-room", "name": "Project Control Room", "repo": "https://github.com/iLLia12/project-control-room", "icon": "radar", "color": "#4493f8" }
+]

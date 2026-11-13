@@ -1,0 +1,85 @@
+{
+  "analyzedAt": "2026-11-12",
+  "tagline": "Correspondence chess with live updates over server-sent events",
+  "platform": "Web app (Node + MySQL, port 3000)",
+  "stack": ["Node.js", "Express", "MySQL 8", "chess.js", "SSE", "Vanilla ES modules", "Docker"],
+  "stage": "Beta",
+  "summary": "A solid multiplayer core. Players can run many games at once, every change is pushed live over SSE, and move legality is decided on the server by chess.js, with each move stored as a row. There's chat, friends, challenges, presence, history navigation, captured pieces and synthesized sounds, plus a smoke test and a Docker setup. The README lists what's not done: real auth, clocks, ratings and takebacks. For a correspondence product, \"your move\" notifications and move deadlines matter most.",
+  "implemented": [
+    { "group": "Games", "items": [
+      "Multiple games in progress at once, shown as tiles with mini boards",
+      "Server-side legality, game-over detection and SAN from chess.js",
+      "Each move stored as a row, so history, captured pieces and threefold repetition come from replaying it",
+      "Click or drag to move, with legal-move hints",
+      "Move history navigation with buttons and arrow keys",
+      "Resign, and draw offer / accept / decline, with confirmation"
+    ]},
+    { "group": "Social", "items": [
+      "Nickname sign-in that creates a player automatically",
+      "Mutual friends and nickname autocomplete",
+      "Challenges that wait for acceptance, plus instant new games",
+      "Online presence from open SSE connections",
+      "Live chat per game"
+    ]},
+    { "group": "Realtime and infrastructure", "items": [
+      "One EventSource per tab, with targeted pushes (game, games, presence, friends, chat)",
+      "Heartbeat every 25 s, and automatic reconnect",
+      "Move and capture sounds synthesized with Web Audio",
+      "Docker Compose with MySQL and phpMyAdmin, plus a seed script",
+      "End-to-end smoke test against the real server and database"
+    ]}
+  ],
+  "inProgress": [
+    { "where": "Branch accounts-admin-and-board-ux (pushed, not merged)", "items": [
+      "Email and password accounts with scrypt, and random session tokens stored only as SHA-256 hashes",
+      "Default admin created on first boot, an admin page that lists and creates accounts, and admins can move for either side",
+      "reset-db and reset-password scripts. The seed script is removed",
+      "Profile moved into a narrow left sidebar. Empty game lists are hidden",
+      "Drag-only moves applied optimistically, rolled back if the server rejects them",
+      "Move and capture sounds from audio files instead of synthesized ones",
+      "Smoke test covers sign-in, the admin API and admin moves"
+    ]},
+    { "where": "Uncommitted on that branch", "items": ["More board.js and styles.css changes (36 insertions, 6 deletions)"] }
+  ],
+  "competitors": [
+    { "name": "Lichess", "note": "Free and open-source, with full correspondence support" },
+    { "name": "Chess.com", "note": "The largest platform, with Daily (correspondence) chess" }
+  ],
+  "matrix": [
+    { "feature": "Many correspondence games at once", "us": 1, "comp": [1, 1] },
+    { "feature": "Live updates without refresh", "us": 1, "comp": [1, 1] },
+    { "feature": "Legal-move hints, drag and click", "us": 1, "comp": [1, 1] },
+    { "feature": "Move history navigation", "us": 1, "comp": [1, 1] },
+    { "feature": "In-game chat", "us": 1, "comp": [1, 1] },
+    { "feature": "Friends and challenges", "us": 1, "comp": [1, 1] },
+    { "feature": "Online presence", "us": 1, "comp": [1, 1] },
+    { "feature": "Resign and draw offers", "us": 1, "comp": [1, 1] },
+    { "feature": "Real authentication (password or OAuth)", "us": 0.5, "comp": [1, 1], "priority": "P1", "note": "main still uses a nickname cookie. Email and password auth is on the accounts-admin-and-board-ux branch, not merged" },
+    { "feature": "\"Your move\" notifications (email or push)", "us": 0, "comp": [1, 1], "priority": "P1", "note": "Critical for correspondence chess. Without them, players have to keep a tab open" },
+    { "feature": "Move deadlines and time controls", "us": 0, "comp": [1, 1], "priority": "P1" },
+    { "feature": "Ratings (Glicko-2)", "us": 0, "comp": [1, 1], "priority": "P2" },
+    { "feature": "Open seeks and matchmaking", "us": 0, "comp": [1, 1], "priority": "P2" },
+    { "feature": "PGN export and import", "us": 0, "comp": [1, 1], "priority": "P2" },
+    { "feature": "Engine analysis and play against the computer", "us": 0, "comp": [1, 1], "priority": "P2", "note": "Stockfish WASM can run in the browser" },
+    { "feature": "Takebacks", "us": 0, "comp": [1, 1], "priority": "P3" },
+    { "feature": "Spectating games", "us": 0, "comp": [1, 1], "priority": "P3" },
+    { "feature": "Conditional moves and premoves", "us": 0, "comp": [1, 1], "priority": "P3" },
+    { "feature": "Board and piece themes", "us": 0, "comp": [1, 1], "priority": "P3" },
+    { "feature": "Puzzles", "us": 0, "comp": [1, 1], "priority": "P3" },
+    { "feature": "Horizontal scaling (shared pub/sub)", "us": 0, "comp": [1, 1], "priority": "P3", "note": "The SSE hub lives inside a single process" }
+  ],
+  "nextSteps": [
+    { "priority": "P1", "title": "Finish and merge accounts-admin-and-board-ux into main", "why": "Real auth and the admin page are already written. Until they're merged, main stays forgeable (the cookie holds the raw user id).", "effort": "S" },
+    { "priority": "P1", "title": "Email or Web Push notification when it's your move", "why": "The core feature of correspondence chess.", "effort": "M" },
+    { "priority": "P1", "title": "Days-per-move deadlines, with a timeout loss", "why": "Without them, abandoned games stay open forever.", "effort": "M" },
+    { "priority": "P2", "title": "PGN export from the moves table", "why": "Easy, since chess.js already produces SAN, and it opens games up to analysis tools.", "effort": "S" },
+    { "priority": "P2", "title": "Glicko-2 ratings and a leaderboard", "why": "Adds a reason to keep playing.", "effort": "M" },
+    { "priority": "P2", "title": "Stockfish WASM analysis board for finished games", "why": "Expected after a game, and runs in the browser with no server cost.", "effort": "M" }
+  ],
+  "risks": [
+    "main has nickname-only auth, so anyone can impersonate a player. The fix is on an unmerged branch",
+    "The SSE hub keeps state in memory, so more than one instance needs Redis or MySQL polling",
+    "There's one commit, so the history is coarse",
+    "phpMyAdmin is signed in automatically as root. Keep it out of any deployed compose file"
+  ]
+}

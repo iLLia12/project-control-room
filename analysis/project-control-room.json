@@ -1,0 +1,51 @@
+{
+  "analyzedAt": "2026-11-12",
+  "tagline": "This app: one screen showing the state of all my projects",
+  "platform": "Local web app (Node, port 5555)",
+  "stack": ["Node.js (no dependencies)", "Vanilla JS", "GitHub REST API", "git CLI"],
+  "stage": "v0.1",
+  "summary": "Just built. A VS Code-style activity bar lists the projects as icons. Each project page combines curated analysis (what's implemented, a feature-parity matrix against similar apps, prioritized next steps, risks) with live data: GitHub commits, languages and issues (ETag-cached), and the local clone's branch, uncommitted changes and unpushed commits, found by scanning sibling folders. The GitHub repo is still empty because nothing has been pushed.",
+  "implemented": [
+    { "group": "UI", "items": [
+      "VS Code-style activity bar with an icon per project and a tooltip with its name",
+      "Overview dashboard with a card per project",
+      "Project page: summary, KPIs, what's implemented, comparison matrix, next steps, risks and activity",
+      "Section outline side panel and a status bar",
+      "Keyboard shortcuts: Ctrl+1 to Ctrl+9 switch projects, R refreshes"
+    ]},
+    { "group": "Data", "items": [
+      "Projects configured in projects.json",
+      "Curated analysis per project in analysis/<id>.json, with an auto-computed parity score",
+      "Live GitHub data with ETag caching, optional token (GITHUB_TOKEN or gh), and a fallback without the token",
+      "Local clones found automatically by matching origin remotes in sibling folders",
+      "'Analysis may be stale' badge when the repo has commits after analyzedAt",
+      "In-progress section for work that isn't on main yet (branches, uncommitted changes)"
+    ]}
+  ],
+  "competitors": [
+    { "name": "GitHub Projects", "note": "Issues, boards and roadmaps on GitHub" },
+    { "name": "Linear", "note": "Fast issue tracking and roadmaps" },
+    { "name": "Backstage", "note": "Spotify's developer portal and software catalog" }
+  ],
+  "matrix": [
+    { "feature": "Overview of all projects", "us": 1, "comp": [1, 1, 1] },
+    { "feature": "Live repo activity", "us": 1, "comp": [1, 0.5, 1] },
+    { "feature": "Local working-copy status (uncommitted, unpushed)", "us": 1, "comp": [0, 0, 0] },
+    { "feature": "Gap analysis against competitors", "us": 1, "comp": [0, 0, 0] },
+    { "feature": "Re-analysis when new commits arrive", "us": 0.5, "comp": [0, 0, 0], "priority": "P1", "note": "A stale badge appears when commits are newer than analyzedAt. Re-analysis itself still means asking Claude" },
+    { "feature": "CI and deploy status", "us": 0, "comp": [1, 0.5, 1], "priority": "P2" },
+    { "feature": "Create and edit issues and tasks", "us": 0, "comp": [1, 1, 0.5], "priority": "P2" },
+    { "feature": "Alerts (stale projects, unpushed work)", "us": 0, "comp": [1, 1, 0.5], "priority": "P3" },
+    { "feature": "Roadmap timeline", "us": 0, "comp": [1, 1, 0], "priority": "P3" }
+  ],
+  "nextSteps": [
+    { "priority": "P1", "title": "Push this repo (git init, commit, push to origin)", "why": "The GitHub repo is empty.", "effort": "S" },
+    { "priority": "P1", "title": "Re-analyze automatically: run a headless Claude Code job that rewrites analysis/<id>.json when a repo changes", "why": "Keeps the assessment current without manual prompts.", "effort": "M" },
+    { "priority": "P2", "title": "Show the GitHub Actions status per repo", "why": "Shows at a glance whether builds and tests pass.", "effort": "S" },
+    { "priority": "P2", "title": "Edit next steps from the UI and save them to analysis JSON", "why": "Makes the control room a planning tool, not only a viewer.", "effort": "M" }
+  ],
+  "risks": [
+    "The unauthenticated GitHub API allows 60 requests an hour. The ETag cache keeps usage low, but a token is better",
+    "Competitor capabilities are approximate, based on public knowledge at analysis time"
+  ]
+}

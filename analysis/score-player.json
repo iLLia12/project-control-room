@@ -1,0 +1,80 @@
+{
+  "analyzedAt": "2026-11-12",
+  "tagline": "Local browser sheet music and tab player with piano fingering and grand piano sound",
+  "platform": "Web app (local Node server, port 3333)",
+  "stack": ["Node.js", "alphaTab 1.9", "Vanilla JS", "SoundFont (YDP Grand Piano)"],
+  "stage": "Beta",
+  "summary": "A Soundslice-style practice player built on alphaTab. It renders notation and tab from Guitar Pro, MusicXML, Capella and alphaTex files. Playback has a moving cursor, looping, speed control, metronome and count-in. Its standout feature is an automatic piano fingering optimizer based on Parncutt's model, which few competitors have. What's missing for a practice tool: MIDI keyboard input with a wait mode, an on-screen keyboard, per-hand practice, transposition, and MIDI file import.",
+  "implemented": [
+    { "group": "Files and library", "items": [
+      "Guitar Pro (gp3 to gp7, gpx), MusicXML (xml, mxl), Capella and alphaTex",
+      "Library of scores on the server, drag-and-drop, and Save to library",
+      "8 bundled example scores",
+      "URL options (?score=…&fingering=1)"
+    ]},
+    { "group": "Rendering", "items": [
+      "Notation and tab rendering",
+      "Page and horizontal layouts, zoom, and stave options",
+      "Per-track show, mute and solo"
+    ]},
+    { "group": "Playback and practice", "items": [
+      "Synthesized playback with a moving cursor and auto-scroll",
+      "Click to seek, and drag-select a passage to play or loop it",
+      "Speed from 25% to 200%, metronome and count-in",
+      "Volume control"
+    ]},
+    { "group": "Piano", "items": [
+      "Suggested fingering from a dynamic-programming optimizer (Parncutt ergonomic model), with right and left hand colored separately",
+      "Uses fingering stored in the file when present",
+      "Sampled concert-grand SoundFont, switchable to General MIDI"
+    ]}
+  ],
+  "inProgress": [
+    { "where": "Uncommitted in the local clone (6 files)", "items": [
+      "Sidebar list of recently opened scores",
+      "Library browser with search (folder icon, or press O)",
+      "Favicon"
+    ]}
+  ],
+  "competitors": [
+    { "name": "Soundslice", "note": "Interactive notation synced to real video, the practice-player benchmark" },
+    { "name": "MuseScore", "note": "Free notation editor and player, huge score catalog" },
+    { "name": "Songsterr", "note": "Guitar tab player with a large catalog" },
+    { "name": "flowkey", "note": "Piano learning app with MIDI wait mode and videos" }
+  ],
+  "matrix": [
+    { "feature": "Notation and tab rendering", "us": 1, "comp": [1, 1, 1, 0.5] },
+    { "feature": "Import Guitar Pro and MusicXML", "us": 1, "comp": [1, 1, 0, 0] },
+    { "feature": "Playback cursor and auto-scroll", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "Loop a section and slow it down", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "Metronome and count-in", "us": 1, "comp": [1, 1, 1, 0.5] },
+    { "feature": "Track mute and solo", "us": 1, "comp": [1, 1, 1, 0.5] },
+    { "feature": "Automatic piano fingering", "us": 1, "comp": [0, 0, 0, 1] },
+    { "feature": "Realistic sampled instruments", "us": 0.5, "comp": [1, 1, 1, 1], "priority": "P3", "note": "Concert grand only. Other instruments use General MIDI" },
+    { "feature": "MIDI keyboard input with a wait mode", "us": 0, "comp": [0, 0, 0, 1], "priority": "P1", "note": "The Web MIDI API is available in Chrome and Edge" },
+    { "feature": "On-screen piano keyboard", "us": 0, "comp": [1, 1, 0, 1], "priority": "P1" },
+    { "feature": "Practice one hand at a time", "us": 0, "comp": [0.5, 0.5, 0, 1], "priority": "P2", "note": "Piano is one track with two staves, so muting a track doesn't separate the hands" },
+    { "feature": "Transpose", "us": 0, "comp": [1, 1, 0.5, 0], "priority": "P2" },
+    { "feature": "MIDI file import", "us": 0, "comp": [1, 1, 0, 0], "priority": "P2" },
+    { "feature": "Synced real audio or video", "us": 0, "comp": [1, 0, 0, 1], "priority": "P3" },
+    { "feature": "Score editing and annotations", "us": 0, "comp": [1, 1, 0, 0], "priority": "P3" },
+    { "feature": "Print and export (PDF, audio)", "us": 0, "comp": [1, 1, 0, 0], "priority": "P3" },
+    { "feature": "Practice progress tracking", "us": 0, "comp": [0.5, 0, 0.5, 1], "priority": "P3" },
+    { "feature": "Phone layout and mobile apps", "us": 0, "comp": [1, 1, 1, 1], "priority": "P3" }
+  ],
+  "nextSteps": [
+    { "priority": "P1", "title": "Commit the recent-scores and library-browser work", "why": "About 190 changed lines exist only locally.", "effort": "S" },
+    { "priority": "P1", "title": "Web MIDI input with a wait mode (playback pauses until the right notes are pressed)", "why": "Turns the app from a player into a practice tool, and works well with the fingering feature.", "effort": "M" },
+    { "priority": "P1", "title": "On-screen piano keyboard that lights up the current notes, colored by finger", "why": "A visual link between the score and your hands. alphaTab's active-beat events provide the data.", "effort": "S" },
+    { "priority": "P2", "title": "Hand-separate practice: mute or hide the treble or bass staff", "why": "The standard way to learn piano pieces.", "effort": "S" },
+    { "priority": "P2", "title": "Transpose control", "why": "alphaTab supports display and playback transposition, so it's cheap to add.", "effort": "S" },
+    { "priority": "P2", "title": "Import MIDI files (.mid) by converting them to MusicXML or alphaTex", "why": "MIDI is the most common format people already have.", "effort": "M" },
+    { "priority": "P3", "title": "Unit tests for fingering.js", "why": "The DP cost model is subtle. Fixed expected fingerings for scales would catch regressions.", "effort": "S" }
+  ],
+  "risks": [
+    "There's one commit, so the change history isn't usable yet",
+    "The 118 MB SoundFont downloads separately, so a first run without `npm run fetch-piano` gets GM-only sound",
+    "app.js has 575 lines in one file with no tests",
+    "The fingering optimizer only covers piano"
+  ]
+}

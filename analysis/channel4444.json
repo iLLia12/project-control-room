@@ -1,0 +1,83 @@
+{
+  "analyzedAt": "2026-11-12",
+  "tagline": "Private invite-only group video meetings, text chat and photo sharing",
+  "platform": "Web app (Node + Socket.IO, port 4444), deployed on DigitalOcean",
+  "stack": ["Node.js", "Express", "Socket.IO", "WebRTC mesh", "coturn", "Caddy", "Docker", "Multer"],
+  "stage": "Live",
+  "summary": "The most mature project: it's deployed, with an automated server setup (Caddy HTTPS, coturn TURN, firewall, nightly backups) and 21 commits of steady iteration. Accounts are invite-only with scrypt passwords and an admin console. Video is a peer-to-peer WebRTC mesh with unusually good diagnostics (mic level bars, a \"no audio received\" label, autoplay recovery). Chat supports photos, editing and deleting. Compared with Jitsi or Discord, it lacks screen sharing, multiple rooms, DMs and notifications, and the mesh limits calls to about 6 people.",
+  "implemented": [
+    { "group": "Accounts and admin", "items": [
+      "Invite-only email and password accounts, with scrypt hashes",
+      "30-day signed-cookie sessions. A password change signs that person out everywhere",
+      "Profile: name, unique private email, avatar, password change",
+      "Admin console in a VS Code-style layout: user table with search and sorting by any column",
+      "Add user (generated password shown once), reset password, suspend and delete (optionally with all their content)",
+      "Admin command line: create, reset-password, list"
+    ]},
+    { "group": "Video", "items": [
+      "Group video over a WebRTC mesh, with TURN relay support",
+      "Join explicitly, with mic and camera toggles and a Leave button",
+      "Joins with whatever devices work, and a red notice explains what's blocked",
+      "Your own mic level (green), incoming audio level per person (blue), and a \"No audio received\" label",
+      "\"Click to turn on sound\" when the browser blocks autoplay"
+    ]},
+    { "group": "Chat", "items": [
+      "Text chat (last 500 messages) with clickable links",
+      "Multiline composer: Enter sends on desktop, the send button on touch screens",
+      "Photo upload (JPEG, PNG, GIF, WebP, up to 20 MB) with captions",
+      "In-app photo viewer, and downloads that keep the original filename",
+      "Edit and delete your own messages, live for everyone, marked (edited)",
+      "Who's in the app, and who's in the call"
+    ]},
+    { "group": "Ops", "items": [
+      "setup.sh: Docker, Caddy HTTPS, coturn, ufw, nightly backups, first admin from ADMIN_EMAIL",
+      "RESET=1 starts over, with a backup taken first",
+      "channel4444-update and logs commands",
+      "Cache-busting with content hashes, so a deploy only needs a normal reload",
+      "Pending writes flushed when the server stops"
+    ]}
+  ],
+  "competitors": [
+    { "name": "Jitsi Meet", "note": "Open-source, self-hostable video meetings" },
+    { "name": "Discord", "note": "Community chat, voice and video channels" },
+    { "name": "Zoom", "note": "Meeting-first video platform" },
+    { "name": "Signal", "note": "Private, end-to-end encrypted messaging and group calls" }
+  ],
+  "matrix": [
+    { "feature": "Group video calls", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "TURN relay for strict NATs", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "Mic and connection diagnostics", "us": 1, "comp": [0.5, 0.5, 1, 0.5] },
+    { "feature": "Text chat with photos", "us": 1, "comp": [0.5, 1, 1, 1] },
+    { "feature": "Edit and delete messages", "us": 1, "comp": [0, 1, 1, 1] },
+    { "feature": "Invite-only accounts with an admin console", "us": 1, "comp": [0.5, 1, 0.5, 0] },
+    { "feature": "Self-hosted, with your own data", "us": 1, "comp": [1, 0, 0, 0] },
+    { "feature": "Screen sharing", "us": 0, "comp": [1, 1, 1, 1], "priority": "P1", "note": "getDisplayMedia on the existing mesh. Small effort" },
+    { "feature": "Push and email notifications", "us": 0, "comp": [0, 1, 1, 1], "priority": "P2" },
+    { "feature": "More than about 6 people on video (SFU)", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2", "note": "The mesh doesn't scale. Consider LiveKit or mediasoup" },
+    { "feature": "Multiple rooms or channels", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2" },
+    { "feature": "Direct messages", "us": 0, "comp": [0, 1, 1, 1], "priority": "P2" },
+    { "feature": "Reactions and replies", "us": 0, "comp": [0.5, 1, 1, 1], "priority": "P2" },
+    { "feature": "Sharing any file type", "us": 0, "comp": [0, 1, 1, 1], "priority": "P2", "note": "Images only" },
+    { "feature": "Typing indicators and unread counts", "us": 0, "comp": [0, 1, 1, 1], "priority": "P3" },
+    { "feature": "Search and history beyond 500 messages", "us": 0, "comp": [0, 1, 1, 1], "priority": "P3" },
+    { "feature": "End-to-end encryption (chat)", "us": 0.5, "comp": [0.5, 0.5, 1, 1], "priority": "P3", "note": "Peer-to-peer media is DTLS-SRTP encrypted. Chat is stored in plain text on the server" },
+    { "feature": "Background blur", "us": 0, "comp": [1, 0.5, 1, 1], "priority": "P3" },
+    { "feature": "Recording", "us": 0, "comp": [1, 0, 1, 0], "priority": "P3" },
+    { "feature": "Native mobile app", "us": 0, "comp": [1, 1, 1, 1], "priority": "P3", "note": "A local channel4444.mobile folder exists but isn't in git" }
+  ],
+  "nextSteps": [
+    { "priority": "P1", "title": "Screen sharing", "why": "The most-used meeting feature that's missing, and it reuses the mesh with a replaceTrack or extra track.", "effort": "S" },
+    { "priority": "P1", "title": "Automated tests for auth, sessions and admin APIs", "why": "This app is live, and none of its 2k lines are covered by tests.", "effort": "M" },
+    { "priority": "P2", "title": "Web Push notifications for new messages and calls starting", "why": "With a private group app, people only come back when they're notified.", "effort": "M" },
+    { "priority": "P2", "title": "Reactions and replies in chat", "why": "Cheap additions that make chat feel modern.", "effort": "S" },
+    { "priority": "P2", "title": "Put channel4444.mobile under git", "why": "It's currently untracked, so there's no backup or history.", "effort": "S" },
+    { "priority": "P3", "title": "Move to an SFU (LiveKit) if calls regularly go past 5 or 6 people", "why": "Upload bandwidth in a mesh grows with every participant.", "effort": "L" }
+  ],
+  "risks": [
+    "No automated tests on a production app with auth and admin powers",
+    "server.js is 774 lines in one file. Split it into routes before adding rooms or DMs",
+    "'setup copy.sh' is committed to the repo by mistake",
+    "Data is stored as files in data/, so there's no transactional database. Fine for a small group",
+    "Password reset depends on an admin, because there's no email"
+  ]
+}

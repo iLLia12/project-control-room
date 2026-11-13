@@ -1,0 +1,79 @@
+{
+  "analyzedAt": "2026-11-12",
+  "tagline": "Free, private, offline e-book reader for iOS with on-device read-aloud",
+  "platform": "iOS 17+ (SwiftUI)",
+  "stack": ["Swift", "SwiftUI", "TextKit", "AVSpeechSynthesizer", "sherpa-onnx (Kokoro, Piper)", "Vision OCR", "PDFKit", "XcodeGen"],
+  "stage": "MVP",
+  "summary": "Covers the whole 20-point MVP spec in about 5.2k lines of Swift. It parses 8 formats with its own parsers, including MOBI/AZW3 HUFF/CDIC decompression. It reads aloud with continuous playback, background audio, lock-screen controls and sentence highlighting, offers optional neural voices that run on the device, and falls back to Vision OCR for scanned PDFs. Compared with established readers, the main gaps are your own highlights and notes, dictionary lookup, a sleep timer and cross-device sync.",
+  "implemented": [
+    { "group": "Formats and import", "items": [
+      "EPUB, PDF, TXT, HTML, DOCX, FB2, MOBI and AZW3, using in-house ZIP, XML and MOBI parsers",
+      "Import from Files and the Share Sheet, download from a link, document scan and photo import",
+      "DRM detection and rejection",
+      "List of free legal book sources"
+    ]},
+    { "group": "Library", "items": [
+      "Grid and list views with cover, format badge and progress",
+      "Sort by recently read, recently added, title, author or progress",
+      "Search, collections and delete",
+      "Book info sheet with metadata and file size"
+    ]},
+    { "group": "Reading", "items": [
+      "TextKit reader with position tracking",
+      "Light, sepia and dark themes, plus font family, size, line spacing and margins",
+      "Table of contents, chapter navigation and bookmarks",
+      "Full-text search inside a book",
+      "Original-page view for PDFs, through PDFKit"
+    ]},
+    { "group": "Read-aloud", "items": [
+      "AVSpeechSynthesizer voices, plus optional Kokoro and Piper neural voices downloaded on demand",
+      "Play, pause, skip, speed control and continuous playback across chapters",
+      "Background audio and lock-screen controls",
+      "Spoken sentence highlighted in sync with the reading position",
+      "Mini-player in the library"
+    ]},
+    { "group": "Text extraction", "items": [
+      "Uses the PDF text layer when there is one, and Vision OCR otherwise",
+      "Lazy per-chapter content store cached in Application Support"
+    ]}
+  ],
+  "competitors": [
+    { "name": "Apple Books", "note": "Built into iOS. EPUB and PDF, store, iCloud sync" },
+    { "name": "Voice Dream Reader", "note": "The reference TTS reader for accessibility" },
+    { "name": "Speechify", "note": "Cloud AI voices, OCR, subscription" },
+    { "name": "KyBook 3", "note": "Power-user reader: FB2 and MOBI, OPDS, TTS" }
+  ],
+  "matrix": [
+    { "feature": "EPUB and PDF", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "MOBI, AZW3, FB2 and DOCX", "us": 1, "comp": [0, 0.5, 0.5, 1] },
+    { "feature": "Read-aloud with sentence highlighting", "us": 1, "comp": [0.5, 1, 1, 1] },
+    { "feature": "Offline neural voices on the device", "us": 1, "comp": [0, 0.5, 0, 0] },
+    { "feature": "Background audio and lock-screen controls", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "OCR for scanned PDFs and photos", "us": 1, "comp": [0, 1, 1, 0] },
+    { "feature": "Themes, fonts and spacing", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "Table of contents and bookmarks", "us": 1, "comp": [1, 1, 1, 1] },
+    { "feature": "Full-text search", "us": 1, "comp": [1, 1, 0.5, 1] },
+    { "feature": "Collections", "us": 1, "comp": [1, 1, 0.5, 1] },
+    { "feature": "Your own highlights and notes", "us": 0, "comp": [1, 1, 1, 1], "priority": "P1", "note": "Only the spoken sentence is highlighted. There are no user annotations" },
+    { "feature": "Sleep timer", "us": 0, "comp": [0, 1, 1, 1], "priority": "P1", "note": "Expected in any listening app" },
+    { "feature": "Dictionary and translation lookup", "us": 0, "comp": [1, 1, 0.5, 1], "priority": "P2", "note": "UIReferenceLibraryViewController makes this almost free" },
+    { "feature": "iCloud sync for library, progress and bookmarks", "us": 0, "comp": [1, 1, 1, 1], "priority": "P2" },
+    { "feature": "Page-turn mode (paginated)", "us": 0, "comp": [1, 0, 0.5, 1], "priority": "P3" },
+    { "feature": "OPDS catalogs and a built-in store", "us": 0.5, "comp": [1, 0.5, 0, 1], "priority": "P3", "note": "Free-source links and download from link only" },
+    { "feature": "Reading stats and goals", "us": 0, "comp": [1, 0, 0.5, 1], "priority": "P3" }
+  ],
+  "nextSteps": [
+    { "priority": "P1", "title": "Ship to TestFlight", "why": "The MVP spec is complete. Real-device feedback is now worth more than more features.", "effort": "S" },
+    { "priority": "P1", "title": "Sleep timer (minutes, or end of chapter)", "why": "Expected in every read-aloud app, and only about an hour of work in SpeechController.", "effort": "S" },
+    { "priority": "P1", "title": "Your own highlights and notes, plus an export", "why": "The biggest feature gap against every competitor. Reuses the UTF-16 offset model.", "effort": "M" },
+    { "priority": "P2", "title": "Dictionary lookup from the text selection menu", "why": "Close to free with UIReferenceLibraryViewController.", "effort": "S" },
+    { "priority": "P2", "title": "iCloud sync of library state (CloudKit or iCloud Documents)", "why": "Lets people move between iPhone and iPad.", "effort": "L" },
+    { "priority": "P3", "title": "Paginated page-turn mode", "why": "Many readers prefer pages to scrolling.", "effort": "M" }
+  ],
+  "risks": [
+    "There's one commit, so changes so far aren't recorded separately",
+    "The sherpa-onnx and onnxruntime frameworks (over 100 MB) aren't in git. A clean build depends on scripts/fetch-frameworks.sh still working",
+    "The test target is thin. The parsers (MOBI HUFF/CDIC, EPUB TOC) deserve fixture-based tests",
+    "App Store review: needs a privacy manifest, and a check on how downloaded neural-voice models are described"
+  ]
+}

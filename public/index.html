@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Control Room</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="workbench">
+    <nav class="activitybar" id="activitybar" aria-label="Projects">
+      <div class="ab-top" id="ab-top"></div>
+      <div class="ab-projects" id="ab-projects"></div>
+      <div class="ab-bottom" id="ab-bottom"></div>
+    </nav>
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-title" id="sb-title">EXPLORER</div>
+      <div class="sb-body" id="sb-body"></div>
+    </aside>
+    <main class="editor">
+      <div class="tabs" id="tabs"></div>
+      <div class="content" id="content"><div class="loading">Loading…</div></div>
+    </main>
+  </div>
+  <footer class="statusbar" id="statusbar"></footer>
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+  <script src="/app.js"></script>
+</body>
+</html>

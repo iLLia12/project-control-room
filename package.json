@@ -1,0 +1,13 @@
+{
+  "name": "project-control-room",
+  "version": "0.1.0",
+  "description": "Control room for my projects: live repo state, what's implemented, and gaps versus similar apps",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "private": true
+}
